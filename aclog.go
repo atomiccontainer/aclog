@@ -6,7 +6,7 @@ package aclog
 import (
 	"os"
 
-	"github.com/uber-go/zap"
+	log "github.com/uber-go/zap"
 )
 
 // Inventory holds an application's container and runtime information.
@@ -19,14 +19,23 @@ type Inventory struct {
 
 func init() {
 	acinv := NewInventory()
-	zap.New(
-		zap.NewJSONEncoder(zap.RFC3339Formatter("timestamp")),
-		zap.Fields(
-			zap.Int("pid", acinv.PID),
-			zap.String("container_id", acinv.ID),
-			zap.String("container_runtime", acinv.Runtime),
-			zap.String("container_image_format", acinv.ImageFormat),
+
+	acLogger := log.New(
+		log.NewJSONEncoder(
+			log.RFC3339Formatter("timestamp"),
+			log.MessageKey("message"),
+			log.LevelString("level"),
 		),
+		log.Fields(
+			log.String("dissembler_version", Version),
+		),
+	)
+
+	acLogger.Info("appc_inventory",
+		log.Int("pid", acinv.PID),
+		log.String("container_id", acinv.ID),
+		log.String("container_runtime", acinv.Runtime),
+		log.String("container_image_format", acinv.ImageFormat),
 	)
 }
 
