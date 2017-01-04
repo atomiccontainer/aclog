@@ -12,6 +12,7 @@ import (
 const (
 	formatDocker       = "docker"
 	formatACI          = "aci"
+	formatOCF          = "ocf"
 	formatUndetermined = "undetermined"
 )
 

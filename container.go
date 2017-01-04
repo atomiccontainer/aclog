@@ -6,7 +6,7 @@ package aclog
 import (
 	"io/ioutil"
 	"os"
-	"strings"
+	"regexp"
 )
 
 // IsContainer returns true if the application is running within a container
@@ -28,6 +28,9 @@ func IsContainer() bool {
 }
 
 func getContainerID() string {
+	dockerIDMatch := regexp.MustCompile(`cpu\:\/docker\/([0-9a-z]+)`)
+	coreOSIDMatch := regexp.MustCompile(`cpuset\:\/system.slice\/docker-([0-9a-z]+)`)
+
 	cgroup, err := ioutil.ReadFile("/proc/self/cgroup")
 	if err != nil {
 		return ""
@@ -35,16 +38,17 @@ func getContainerID() string {
 
 	strCgroup := string(cgroup)
 
-	b := strings.Index(strCgroup, "cpu:/docker/")
-	e := strings.LastIndex(strCgroup, "1:cpuset")
+	loc := dockerIDMatch.FindStringIndex(strCgroup)
 
-	if b != -1 {
-		return strCgroup[b+12 : e-2]
+	if loc != nil {
+		return strCgroup[loc[0]+12 : loc[1]-2]
 	}
 
-	// Not empty and not native Docker, attempt CoreOS
-	if b = strings.Index(strCgroup, "cpuset:/system.slice/docker-"); b != -1 {
-		return strCgroup[b:]
+	// cgroup not nil, not Docker. Check for CoreOS.
+	loc = coreOSIDMatch.FindStringIndex(strCgroup)
+
+	if loc != nil {
+		return strCgroup[loc[0]+27:]
 	}
 
 	return ""
