@@ -42,5 +42,9 @@ func getRuntime() string {
 		return runtimeRkt
 	}
 
+	if _, err := os.Stat("/dev/lxd/sock"); err == nil {
+		return runtimeLXD
+	}
+
 	return runtimeUndetermined
 }

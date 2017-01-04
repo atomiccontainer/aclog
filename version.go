@@ -14,7 +14,7 @@ var (
 
 const (
 	// Version is the semantic version number being executed.
-	Version = "1.1.0"
+	Version = "1.1.2"
 
 	// VersionPrerelease marks the pre-release version. If this is ""
 	// (empty string) then it is a final release. Otherwise, this is a pre-release

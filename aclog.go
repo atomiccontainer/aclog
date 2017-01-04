@@ -6,7 +6,8 @@ package aclog
 import (
 	"os"
 
-	log "github.com/uber-go/zap"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 // Inventory holds an application's container and runtime information.
@@ -20,22 +21,37 @@ type Inventory struct {
 func init() {
 	acinv := NewInventory()
 
-	acLogger := log.New(
-		log.NewJSONEncoder(
-			log.RFC3339Formatter("timestamp"),
-			log.MessageKey("message"),
-			log.LevelString("level"),
-		),
-		log.Fields(
-			log.String("dissembler_version", Version),
-		),
-	)
+	acLogger, _ := zap.Config{
+		Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
+		Development: false,
+		Sampling: &zap.SamplingConfig{
+			Initial:    100,
+			Thereafter: 100,
+		},
+		Encoding: "json",
+		EncoderConfig: zapcore.EncoderConfig{
+			TimeKey:        "timestamp",
+			LevelKey:       "level",
+			NameKey:        "logger",
+			CallerKey:      "caller",
+			MessageKey:     "message",
+			StacktraceKey:  "stacktrace",
+			EncodeLevel:    zapcore.LowercaseLevelEncoder,
+			EncodeTime:     zapcore.ISO8601TimeEncoder,
+			EncodeDuration: zapcore.SecondsDurationEncoder,
+			EncodeCaller:   zapcore.ShortCallerEncoder,
+		},
+		OutputPaths:      []string{"stderr"},
+		ErrorOutputPaths: []string{"stderr"},
+	}.Build(zap.Fields(
+		zap.String("aclog_version", Version),
+	))
 
 	acLogger.Info("appc_inventory",
-		log.Int("pid", acinv.PID),
-		log.String("container_id", acinv.ID),
-		log.String("container_runtime", acinv.Runtime),
-		log.String("container_image_format", acinv.ImageFormat),
+		zap.Int("pid", acinv.PID),
+		zap.String("container_id", acinv.ID),
+		zap.String("container_runtime", acinv.Runtime),
+		zap.String("container_image_format", acinv.ImageFormat),
 	)
 }
 
