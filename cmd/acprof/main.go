@@ -6,11 +6,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/christianvozar/aclog"
+	"github.com/atomiccontainer/acprof"
 )
 
 func main() {
-	i := aclog.New()
+	i := acprof.New()
 
 	fmt.Println(i.JSON())
 }

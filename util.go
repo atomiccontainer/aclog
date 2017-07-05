@@ -1,4 +1,7 @@
-package aclog
+// Copyright © 2017 Christian R. Vozar ⚜
+// Licensed under the MIT License. All rights reserved.
+
+package acprof
 
 import (
 	"os"

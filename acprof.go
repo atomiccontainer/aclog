@@ -1,7 +1,7 @@
 // Copyright © 2017 Christian R. Vozar ⚜
 // Licensed under the MIT License. All rights reserved.
 
-package aclog
+package acprof
 
 import (
 	"encoding/json"

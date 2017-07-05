@@ -1,7 +1,7 @@
 // Copyright © 2017 Christian R. Vozar ⚜
 // Licensed under the MIT License. All rights reserved.
 
-package aclog
+package acprof
 
 var (
 	// GitCommit is the git commit that was compiled. This will be filled in by
