@@ -30,11 +30,11 @@ func getImageFormat() string {
 		return formatDocker
 	}
 
-	if ac := os.Getenv("AC_METADATA_URL"); ac != "" {
+	if _, ok := EnvironmentVariables["AC_METADATA_URL"]; ok {
 		return formatACI
 	}
 
-	if ac := os.Getenv("AC_APP_NAME"); ac != "" {
+	if _, ok := EnvironmentVariables["AC_APP_NAME"]; ok {
 		return formatACI
 	}
 

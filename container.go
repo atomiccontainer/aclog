@@ -31,25 +31,30 @@ func getContainerID() string {
 	dockerIDMatch := regexp.MustCompile(`cpu\:\/docker\/([0-9a-z]+)`)
 	coreOSIDMatch := regexp.MustCompile(`cpuset\:\/system.slice\/docker-([0-9a-z]+)`)
 
-	cgroup, err := ioutil.ReadFile("/proc/self/cgroup")
-	if err != nil {
-		return ""
+	if _, err := os.Stat("/proc/self/cgroup"); os.IsExist(err) {
+		cgroup, _ := ioutil.ReadFile("/proc/self/cgroup")
+		strCgroup := string(cgroup)
+		loc := dockerIDMatch.FindStringIndex(strCgroup)
+
+		if loc != nil {
+			return strCgroup[loc[0]+12 : loc[1]-2]
+		}
+
+		// cgroup not nil, not vanilla Docker. Check for CoreOS.
+		loc = coreOSIDMatch.FindStringIndex(strCgroup)
+
+		if loc != nil {
+			return strCgroup[loc[0]+27:]
+		}
 	}
 
-	strCgroup := string(cgroup)
+	return "undetermined"
+}
 
-	loc := dockerIDMatch.FindStringIndex(strCgroup)
-
-	if loc != nil {
-		return strCgroup[loc[0]+12 : loc[1]-2]
+func getHostname() string {
+	if _, ok := EnvironmentVariables["HOSTNAME"]; ok {
+		return EnvironmentVariables["HOSTNAME"]
 	}
 
-	// cgroup not nil, not Docker. Check for CoreOS.
-	loc = coreOSIDMatch.FindStringIndex(strCgroup)
-
-	if loc != nil {
-		return strCgroup[loc[0]+27:]
-	}
-
-	return ""
+	return "undetermined"
 }

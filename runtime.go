@@ -34,11 +34,11 @@ func getRuntime() string {
 		return runtimeDocker
 	}
 
-	if ac := os.Getenv("AC_METADATA_URL"); ac != "" {
+	if _, ok := EnvironmentVariables["AC_METADATA_URL"]; ok {
 		return runtimeRkt
 	}
 
-	if ac := os.Getenv("AC_APP_NAME"); ac != "" {
+	if _, ok := EnvironmentVariables["AC_APP_NAME"]; ok {
 		return runtimeRkt
 	}
 

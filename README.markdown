@@ -1,12 +1,12 @@
 # aclog
 
-App container introspection.
+Container profile & introspection.
 
 ```Go
 import "github.com/christianvozar/aclog"
 ```
 
-aclog is intended for Go applications designed to run specifically within container runtimes. The aim is to provide an inventory of the executing container and its runtime for debugging purposes.
+aclog detects information about the running container and its runtime. The aim is to provide an inventory of the executing container and its runtime for debugging purposes.
 
 ## Usage
 
@@ -14,19 +14,14 @@ aclog is intended for Go applications designed to run specifically within contai
 package main
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/christianvozar/aclog"
 )
 
 func main() {
-	i, err := aclog.New()
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	i := aclog.New()
 
-	format := "Container Inventory:\nID: %s\nRuntime: %s\nImage Format: %s\n PID: %s\n"
-	_, err := fmt.Printf(format, i.ID, i.Runtime, i.ImageFormat, i.PID)
-	fmt.Println("")
+	fmt.Println(i.JSON())
 }
 ```

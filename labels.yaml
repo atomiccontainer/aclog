@@ -1,0 +1,98 @@
+---
+repo: christianvozar/aclog
+labels:
+# Architectures
+- name: amd64
+  color: fcfbe3
+- name: arm
+  color: fcfbe3
+- name: arm64
+  color: fcfbe3
+- name: i386
+  color: fcfbe3
+- name: mips
+  color: fcfbe3
+- name: mips64
+  color: fcfbe3
+# Operating Systems
+- name: android
+  color: e2e1cc
+- name: ios
+  color: e2e1cc
+- name: linux
+  color: e2e1cc
+- name: windows
+  color: e2e1cc
+- name: solaris
+  color: e2e1cc
+- name: darwin
+  color: e2e1cc
+- name: plan9
+  color: e2e1cc
+- name: netbsd
+  color: e2e1cc
+- name: freebsd
+  color: e2e1cc
+- name: nacl
+  color: e2e1cc
+- name: dragonfly
+  color: e2e1cc
+- name: openbsd
+  color: e2e1cc
+# Inactive
+- name: noaction/invalid
+  color: cccccc
+- name: noaction/wontfix
+  color: cccccc
+- name: noaction/duplicate
+  color: cccccc
+- name: noaction/onhold
+  color: cccccc
+# Environments
+# The integration environment is "...for robots and curious humans."
+# This environment is for ensuring appropriate integratio with all codebases
+# and services.
+- name: integration
+  color: 556270
+# The release "candidate"
+- name: candidate
+  color: 556270
+- name: release
+  color: 556270
+- name: model
+  color: 556270
+# Improvements
+- name: enhancement
+  color: 61D2D6
+- name: optimization
+  color: 61D2D6
+- name: refactor
+  color: 61D2D6
+- name: clarity
+  color: 61D2D6
+# Feedback
+- name: question
+  color: ff8080
+- name: rfc
+  color: ff8080
+- name: discuss
+  color: ff8080
+# Mindless
+- name: chore
+  color: edde45
+- name: legal
+  color: edde45
+# Problems
+- name: bug
+  color: ff5500
+- name: security
+  color: ff5500
+- name: performance
+  color: ff5500
+# Design
+- name: ux
+  color: c9e69a
+- name: design
+  color: c9e69a
+- name: copy
+  color: c9e69a

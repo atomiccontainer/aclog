@@ -4,63 +4,48 @@
 package aclog
 
 import (
+	"encoding/json"
+	"fmt"
 	"os"
-
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
+
+// EnvironmentVariables is used to cache all environment variables read at
+// execution.
+var EnvironmentVariables map[string]string
+
+func init() {
+	EnvironmentVariables = environMap()
+}
 
 // Inventory holds an application's container and runtime information.
 type Inventory struct {
-	ID          string
-	Runtime     string
-	ImageFormat string
-	PID         int
+	Hostname    string `json:"hostname"`
+	ID          string `json:"id"`
+	ImageFormat string `json:"image_format"`
+	PID         int    `json:"pid"`
+	Runtime     string `json:"runtime"`
+	Scheduler   string `json:"scheduler"`
 }
 
-func init() {
-	acinv := NewInventory()
-
-	acLogger, _ := zap.Config{
-		Level:       zap.NewAtomicLevelAt(zap.InfoLevel),
-		Development: false,
-		Sampling: &zap.SamplingConfig{
-			Initial:    100,
-			Thereafter: 100,
-		},
-		Encoding: "json",
-		EncoderConfig: zapcore.EncoderConfig{
-			TimeKey:        "timestamp",
-			LevelKey:       "level",
-			NameKey:        "logger",
-			CallerKey:      "caller",
-			MessageKey:     "message",
-			StacktraceKey:  "stacktrace",
-			EncodeLevel:    zapcore.LowercaseLevelEncoder,
-			EncodeTime:     zapcore.ISO8601TimeEncoder,
-			EncodeDuration: zapcore.SecondsDurationEncoder,
-			EncodeCaller:   zapcore.ShortCallerEncoder,
-		},
-		OutputPaths:      []string{"stderr"},
-		ErrorOutputPaths: []string{"stderr"},
-	}.Build(zap.Fields(
-		zap.String("aclog_version", Version),
-	))
-
-	acLogger.Info("appc_inventory",
-		zap.Int("pid", acinv.PID),
-		zap.String("container_id", acinv.ID),
-		zap.String("container_runtime", acinv.Runtime),
-		zap.String("container_image_format", acinv.ImageFormat),
-	)
-}
-
-// NewInventory returns a new Inventory with populated values.
-func NewInventory() *Inventory {
+// New returns a new Inventory with populated values.
+func New() *Inventory {
 	return &Inventory{
+		Hostname:    getHostname(),
 		ID:          getContainerID(),
-		Runtime:     getRuntime(),
 		ImageFormat: getImageFormat(),
 		PID:         os.Getpid(),
+		Runtime:     getRuntime(),
+		Scheduler:   getScheduler(),
 	}
+}
+
+// JSON returns the Inventory as JSON string.
+func (i Inventory) JSON() string {
+	j, err := json.Marshal(i)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
+
+	return string(j)
 }

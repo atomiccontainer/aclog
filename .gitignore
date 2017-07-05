@@ -1,3 +1,6 @@
+# Compiled Binaries
+cmd/aclog/aclog
+
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
 *.a
